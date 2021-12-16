@@ -1,14 +1,17 @@
 
 package com.example.randomapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     public int randVal;
     public int guessVal;
     public int tries = 3;
+    public String msg = "This game allows a user to make guesses at a random number." +
+            "\n Click the 'GENERATE' button to randomly choose a number." +
+            "\n Then click the 'PLAY' button to submit your guess.\n\n GOOD LUCK!!!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         final AppCompatButton guessBtn = findViewById(R.id.guessBtn);
         final Button randomBtn = (Button) findViewById(R.id.randomBtn);
+        final ImageButton settingsBtn = (ImageButton) findViewById(R.id.settingsBtn);
         final TextView guessView = findViewById(R.id.guessView);
         final TextView welcomeView = findViewById(R.id.welcomeView);
         final EditText editGuess =  findViewById(R.id.editGuess);
@@ -73,11 +80,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (guessVal < randVal){
                         Toast.makeText(MainActivity.this, "Too Cold", Toast.LENGTH_SHORT).show();
                         mLinearLayout.setBackgroundResource(R.mipmap.cold);
-
                     } else {
                         Toast.makeText(MainActivity.this, "Too Hot", Toast.LENGTH_SHORT).show();
                         mLinearLayout.setBackgroundResource(R.mipmap.hot);
-
                     }
                     guessValue();
                     guessView.setText(String.valueOf(tries));
@@ -87,6 +92,13 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        });
+
+        settingsBtn.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setMessage(msg)
+                    .setPositiveButton("OK", null)
+                    .show();
         });
 
     }

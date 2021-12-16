@@ -24,7 +24,7 @@
         android:layout_marginTop="520dp"/>
 
     <ImageButton
-        android:id="@+id/instructionBtn"
+        android:id="@+id/settingsBtn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_baseline_settings_24"
