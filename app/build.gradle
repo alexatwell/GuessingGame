@@ -22,7 +22,7 @@ android {
         }
     }
     compileSdkVersion 31
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '30.0.2'
 }
 
 dependencies {
