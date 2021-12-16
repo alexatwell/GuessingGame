@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
+
+        RelativeLayout mLinearLayout = (RelativeLayout) findViewById(R.id.relativeLayoutID);
 
         randomBtn.setOnClickListener(v -> {
 
@@ -65,6 +68,17 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 try{
                     guessVal = Integer.parseInt(guessText);
+                    if(guessVal == randVal){
+                        Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    } else if (guessVal < randVal){
+                        Toast.makeText(MainActivity.this, "Too Cold", Toast.LENGTH_SHORT).show();
+                        mLinearLayout.setBackgroundResource(R.mipmap.cold);
+
+                    } else {
+                        Toast.makeText(MainActivity.this, "Too Hot", Toast.LENGTH_SHORT).show();
+                        mLinearLayout.setBackgroundResource(R.mipmap.hot);
+
+                    }
                     guessValue();
                     guessView.setText(String.valueOf(tries));
                 } catch (NumberFormatException e) {
@@ -79,13 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void guessValue() {
-        if(guessVal == randVal){
-            Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
-        } else if (guessVal < randVal){
-            Toast.makeText(MainActivity.this, "Too Cold", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, "Too Hot", Toast.LENGTH_SHORT).show();
-        }
         tries--;
         if (tries <= 0){
             System.exit(0);
