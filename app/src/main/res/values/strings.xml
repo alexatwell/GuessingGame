@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">RandomApp</string>
+    <string name="app_name">GuessingGame</string>
+    <string name="welcome_txt">GUESSING GAME</string>
+    <string name="attempt_hint">ATTEMPTS LEFT</string>
+    <string name="guess_hint">Enter Guess</string>
+    <string name="guessBtn_txt">GUESS</string>
+    <string name="playBtn_txt">START!</string>
+    <string-array name="difficulty_list">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Professional</item>
+    </string-array>
 </resources>
