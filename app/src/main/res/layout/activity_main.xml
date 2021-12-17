@@ -103,11 +103,11 @@
             android:id="@+id/startBtn"
             android:layout_width="250dp"
             android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:background="@color/btnColor"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:layout_centerHorizontal="true"
             android:text="@string/playBtn_txt"
             android:textSize="35dp"
             android:textStyle="bold"
@@ -117,42 +117,54 @@
             android:id="@+id/guessBtn"
             android:layout_width="250dp"
             android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
+            android:background="@color/btnColor"
             android:fontFamily="sans-serif"
             android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:background="@color/btnColor"
             android:text="@string/guessBtn_txt"
             android:textSize="35dp"
             android:textStyle="bold"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/returnBtn"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="100dp"
             android:background="@color/purple_200"
-            android:src="@drawable/ic_baseline_return_40"
             android:paddingStart="12dp"
             android:paddingEnd="24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="100dp"
-            android:visibility="invisible"/>
+            android:src="@drawable/ic_baseline_return_40"
+            android:visibility="invisible" />
 
         <ImageButton
-            android:id="@+id/continueBtn"
+            android:id="@+id/retryBtn"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="100dp"
             android:background="@color/purple_200"
-            android:src="@drawable/ic_baseline_replay_40"
             android:paddingStart="12dp"
             android:paddingEnd="24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="100dp"
-            android:visibility="invisible"/>
+            android:src="@drawable/ic_baseline_replay_40"
+            android:visibility="invisible" />
 
+        <ImageButton
+            android:id="@+id/levelUpBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="210dp"
+            android:layout_marginEnd="158dp"
+            android:background="@color/purple_200"
+            android:paddingStart="12dp"
+            android:paddingEnd="24dp"
+            android:src="@drawable/ic_baseline_replay_40"
+            android:visibility="invisible" />
 
 
     </RelativeLayout>

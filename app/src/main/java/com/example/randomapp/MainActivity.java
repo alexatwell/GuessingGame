@@ -6,12 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText gRangeValue;
     private SeekBar guessRange;
     private Button startBtn;
-    private ImageButton continueBtn;
+    private ImageButton retryBtn;
     private ImageButton returnBtn;
     private AppCompatButton guessBtn;
     private String remainder;
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         gRangeValue.setEnabled(false);
         startBtn = findViewById(R.id.startBtn);
         guessBtn = findViewById(R.id.guessBtn);
-        continueBtn = findViewById(R.id.continueBtn);
+        retryBtn = findViewById(R.id.retryBtn);
         returnBtn = findViewById(R.id.returnBtn);
 
         //final EditText editGuess =  findViewById(R.id.editGuess);
@@ -107,15 +101,15 @@ public class MainActivity extends AppCompatActivity {
             attemptView.setVisibility(View.INVISIBLE);
             guessRange.setVisibility(View.INVISIBLE);
             gRangeValue.setVisibility(View.INVISIBLE);
-            continueBtn.setVisibility(View.INVISIBLE);
+            retryBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
         });
 
         // Continue current difficulty
-        continueBtn.setOnClickListener(v ->{
-            tries = tempTries;
+        retryBtn.setOnClickListener(v ->{
+            tempTries = tries;
             guessBtn.setVisibility(View.VISIBLE);
-            continueBtn.setVisibility(View.INVISIBLE);
+            retryBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
             guessRange.setProgress(upperbound/2);
             gRangeValue.setText(String.valueOf(guessRange.getProgress()));
@@ -143,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Determine when a game is won
         guessBtn.setOnClickListener(v -> {
-            final int guessVal = guessRange.getProgress();
+            final int guessVal = guessRange.getProgress() + 1;
 
             if(guessVal == randVal ){
                 Toast.makeText(MainActivity.this, "WELL DONE, YOU'VE WON!", Toast.LENGTH_SHORT).show();
@@ -195,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     public void endCurrentGame(){
         String ans = "Answer: " + randVal;
         attemptView.setText(ans);
-        continueBtn.setVisibility(View.VISIBLE);
+        retryBtn.setVisibility(View.VISIBLE);
         returnBtn.setVisibility(View.VISIBLE);
         guessBtn.setVisibility(View.INVISIBLE);
     }
@@ -210,11 +204,11 @@ public class MainActivity extends AppCompatActivity {
             upperbound = 9;
         }else if(difficultySpinner.getSelectedItemPosition() == 1){
             // Intermediate Difficulty
-            tries = 10;
+            tries = 5;
             upperbound = 49;
         }else if(difficultySpinner.getSelectedItemPosition() == 2){
             // Professional Difficulty
-            tries = 15;
+            tries = 3;
             upperbound = 99;
         }else{
             tries = 2;
