@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRelativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
-
     android:backgroundTint="@color/purple_200"
     android:orientation="vertical">
 
@@ -19,11 +19,9 @@
             android:layout_height="44dp"
             android:paddingStart="12dp"
             android:paddingEnd="24dp"
-            android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
-            android:visibility="invisible"/>
-
+            android:visibility="visible"/>
 
 
         <ImageButton
@@ -50,10 +48,10 @@
             android:id="@+id/welcomeView"
             android:layout_width="wrap_content"
             android:layout_height="75dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="40dp"
             android:background="@color/teal_200"
             android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:text="@string/welcome_txt"
             android:textColor="@color/white"
             android:textSize="35dp" />
@@ -63,37 +61,27 @@
             android:layout_width="200dp"
             android:layout_height="150dp"
             android:layout_below="@id/welcomeView"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="5dp"
             android:background="@color/teal_200"
             android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:hint="@string/attempt_hint"
             android:textColor="@color/white"
-            android:textSize="35dp" />
+            android:textSize="35dp"
+            android:visibility="invisible"/>
 
         <SeekBar
             android:id="@+id/guessControl"
-            android:layout_width="400dp"
+            android:layout_width="300dp"
             android:layout_height="40dp"
-            android:progress="20"
             android:gravity="center"
-            android:secondaryProgress="20"
             android:progressDrawable="@drawable/custom_seek_bar"
             android:thumb="@drawable/custom_seek_thumb"
-            android:visibility="visible"
-            android:layout_below="@id/attemptView"
-            android:layout_marginTop="40dp"/>
-       <!-- <EditText
-            android:id="@+id/editGuess"
-            android:layout_width="200dp"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:hint="@string/guess_hint"
-            android:textSize="50dp"
             android:visibility="invisible"
             android:layout_below="@id/attemptView"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="20dp"/>-->
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -104,12 +92,12 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/startBtn"
             android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="50dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="60dp"
             android:background="@color/btnColor"
             android:fontFamily="sans-serif"
             android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:text="@string/playBtn_txt"
             android:textSize="35dp"
             android:textStyle="bold"
@@ -118,17 +106,45 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/guessBtn"
             android:layout_width="250dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="50dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="60dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:background="@color/btnColor"
             android:text="@string/guessBtn_txt"
             android:textSize="35dp"
             android:textStyle="bold"
             android:visibility="invisible"/>
 
+        <ImageButton
+            android:id="@+id/returnBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@color/purple_200"
+            android:src="@drawable/ic_baseline_return_40"
+            android:paddingStart="12dp"
+            android:paddingEnd="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="100dp"
+            android:visibility="invisible"/>
+
+        <ImageButton
+            android:id="@+id/continueBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@color/purple_200"
+            android:src="@drawable/ic_baseline_replay_40"
+            android:paddingStart="12dp"
+            android:paddingEnd="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="100dp"
+            android:visibility="invisible"/>
+
+
+
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
