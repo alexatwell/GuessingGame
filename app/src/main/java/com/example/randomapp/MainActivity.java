@@ -6,10 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner difficultySpinner;
     private TextView attemptView;
     private TextView welcomeView;
+    private EditText gRangeValue;
     private SeekBar guessRange;
     private Button startBtn;
     private ImageButton continueBtn;
@@ -48,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // UI elements
         difficultySpinner  = findViewById(R.id.spinner);
         ImageButton rulesBtn = findViewById(R.id.instructionsBtn);
         welcomeView = findViewById(R.id.welcomeView);
         attemptView = findViewById(R.id.attemptView);
         guessRange = findViewById(R.id.guessControl);
+        gRangeValue = findViewById(R.id.guessControlVal);
+        gRangeValue.setEnabled(false);
         startBtn = findViewById(R.id.startBtn);
         guessBtn = findViewById(R.id.guessBtn);
         continueBtn = findViewById(R.id.continueBtn);
@@ -65,13 +75,15 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
 
-        RelativeLayout mLinearLayout = (RelativeLayout) findViewById(R.id.mainRelativeLayout);
+        RelativeLayout mLinearLayout = findViewById(R.id.mainRelativeLayout);
 
+        // Add difficulty options
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this ,R.array.difficulty_list,
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         difficultySpinner.setAdapter(adapter);
 
+        // New game
         startBtn.setOnClickListener(v -> {
             setDifficulty();
             difficultySpinner.setVisibility(View.INVISIBLE);
@@ -81,33 +93,42 @@ public class MainActivity extends AppCompatActivity {
             guessBtn.setVisibility(View.VISIBLE);
             guessRange.setVisibility(View.VISIBLE);
             guessRange.setMax(upperbound);
-            //editGuess.setVisibility(View.VISIBLE);
+            guessRange.setProgress(upperbound/2 + 1);
+            gRangeValue.setVisibility(View.VISIBLE);
+            gRangeValue.setText(String.valueOf(guessRange.getProgress()));
             attemptView.setText(remainder);
         });
 
+        // Return to Home screen
         returnBtn.setOnClickListener(v ->{
             difficultySpinner.setVisibility(View.VISIBLE);
             startBtn.setVisibility(View.VISIBLE);
             welcomeView.setVisibility(View.VISIBLE);
             attemptView.setVisibility(View.INVISIBLE);
             guessRange.setVisibility(View.INVISIBLE);
+            gRangeValue.setVisibility(View.INVISIBLE);
             continueBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
         });
 
+        // Continue current difficulty
         continueBtn.setOnClickListener(v ->{
             tries = tempTries;
             guessBtn.setVisibility(View.VISIBLE);
             continueBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
+            guessRange.setProgress(upperbound/2);
+            gRangeValue.setText(String.valueOf(guessRange.getProgress()));
         });
 
+        // Update the edittext to show the selected value on the seekbar
         guessRange.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress + 1;
+                gRangeValue.setText(String.valueOf(progressChanged));
             }
 
             @Override
@@ -116,17 +137,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(MainActivity.this, String.valueOf(progressChanged), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, String.valueOf(progressChanged), Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Determine when a game is won
         guessBtn.setOnClickListener(v -> {
             final int guessVal = guessRange.getProgress();
 
             if(guessVal == randVal ){
                 Toast.makeText(MainActivity.this, "WELL DONE, YOU'VE WON!", Toast.LENGTH_SHORT).show();
                 endCurrentGame();
-            } else if (guessVal < randVal && tries > 1){
+            } else if (guessVal < randVal){
                 removeTries();
                 if(tries <= 0){
                     return;
@@ -137,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     Toast.makeText(MainActivity.this, "COLDER!", Toast.LENGTH_SHORT).show();
                 }
-            } else if(guessVal > randVal && tries > 1){
+            } else{
                 removeTries();
                 if(guessVal <= randVal * 2){
                     Toast.makeText(MainActivity.this, "HOT!", Toast.LENGTH_SHORT).show();
@@ -148,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Show the rules
         rulesBtn.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
                     .setMessage(rules)
@@ -157,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Decrement tries and end game if player is out of attempts
     public void removeTries() {
         tries--;
         remainder = "Attempt #" + tries;
@@ -167,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Stop the current game and reset variables
     public void endCurrentGame(){
         String ans = "Answer: " + randVal;
         attemptView.setText(ans);
@@ -175,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         guessBtn.setVisibility(View.INVISIBLE);
     }
 
+    // Set the number of tries. determine the generated number, and set the seekbar's limit
     public void setDifficulty(){
         Random rand = new Random(); //instance of random class
 
@@ -200,5 +226,19 @@ public class MainActivity extends AppCompatActivity {
         int int_random = rand.nextInt(upperbound);
         randVal = int_random + 1;
     }
+
+
+    /*public BitmapDrawable writeOnDrawable(int drawableId, String text){
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(20);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawText(text,0,bitmap.getHeight()/2,paint,);
+
+        return new BitmapDrawable(bitmap);
+    }*/
+
 
 }

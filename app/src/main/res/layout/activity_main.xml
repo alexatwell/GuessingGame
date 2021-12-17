@@ -84,6 +84,16 @@
 
     </RelativeLayout>
 
+    <EditText
+        android:id="@+id/guessControlVal"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="420dp"
+        android:gravity="center"
+        android:textSize="35dp"
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -92,8 +102,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/startBtn"
             android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
             android:background="@color/btnColor"
             android:fontFamily="sans-serif"
             android:gravity="center"
@@ -106,8 +116,8 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/guessBtn"
             android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="sans-serif"
             android:gravity="center"
             android:layout_centerHorizontal="true"
