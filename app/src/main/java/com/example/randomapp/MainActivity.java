@@ -22,8 +22,8 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private int randVal;
-    private int tries;
-    private int tempTries;
+    private int tries = 1;
+    private int maxTries;
     private int upperbound;
     private Spinner difficultySpinner;
     private TextView attemptView;
@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
             "\n 7: Guess the correct value to win" +
             "\n\n GOOD LUCK!!!";
 
+    Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         guessBtn = findViewById(R.id.guessBtn);
         retryBtn = findViewById(R.id.retryBtn);
         returnBtn = findViewById(R.id.returnBtn);
+
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         //final EditText editGuess =  findViewById(R.id.editGuess);
 
@@ -107,12 +111,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Continue current difficulty
         retryBtn.setOnClickListener(v ->{
-            tempTries = tries;
+            setDifficulty();
             guessBtn.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
             guessRange.setProgress(upperbound/2);
             gRangeValue.setText(String.valueOf(guessRange.getProgress()));
+            attemptView.setText(remainder);
         });
 
         // Update the edittext to show the selected value on the seekbar
@@ -138,32 +143,31 @@ public class MainActivity extends AppCompatActivity {
         // Determine when a game is won
         guessBtn.setOnClickListener(v -> {
             final int guessVal = guessRange.getProgress() + 1;
-
-            if(guessVal == randVal ){
-                Toast.makeText(MainActivity.this, "WELL DONE, YOU'VE WON!", Toast.LENGTH_SHORT).show();
-                endCurrentGame();
-            } else if (guessVal < randVal){
-                removeTries();
-                if(tries <= 0){
-                    return;
-                }
-                if(guessVal <= randVal / 2){
-                    Toast.makeText(MainActivity.this, "COLD!", Toast.LENGTH_SHORT).show();
-                    mLinearLayout.setBackgroundResource(R.mipmap.cold);
-                }else {
-                    Toast.makeText(MainActivity.this, "COLDER!", Toast.LENGTH_SHORT).show();
-                }
-            } else{
-                removeTries();
-                if(guessVal <= randVal * 2){
-                    Toast.makeText(MainActivity.this, "HOT!", Toast.LENGTH_SHORT).show();
-                    mLinearLayout.setBackgroundResource(R.mipmap.cold);
-                }else {
-                    Toast.makeText(MainActivity.this, "HOTTER!", Toast.LENGTH_SHORT).show();
+            if(monitorTries()) {
+                if (guessVal < randVal) {
+                    if (tries <= 0) {
+                        return;
+                    }
+                    if (guessVal <= randVal / 2) {
+                        mToast.setText("COLD");
+                        mToast.show();
+                        mLinearLayout.setBackgroundResource(R.mipmap.cold);
+                    } else {
+                        mToast.setText("COLDER");
+                        mToast.show();
+                    }
+                } else {
+                    if (guessVal <= randVal * 2) {
+                        mToast.setText("HOT");
+                        mToast.show();
+                        mLinearLayout.setBackgroundResource(R.mipmap.cold);
+                    } else {
+                        mToast.setText("HOTTER");
+                        mToast.show();
+                    }
                 }
             }
         });
-
         // Show the rules
         rulesBtn.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
@@ -173,21 +177,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     // Decrement tries and end game if player is out of attempts
-    public void removeTries() {
-        tries--;
-        remainder = "Attempt #" + tries;
-        attemptView.setText(remainder);
-        if (tries <= 0){
-            Toast.makeText(MainActivity.this, "BETTER LUCK NEXT TIME!", Toast.LENGTH_SHORT).show();
-            endCurrentGame();
+    public boolean monitorTries() {
+        tries++;
+        if (tries + 1 > maxTries){
+            remainder = "Last Chance!!";
+        }else{
+            remainder = "Attempt #" + tries;
         }
+        attemptView.setText(remainder);
+        if (tries > maxTries){
+            mToast.setText("BETTER LUCK NEXT TIME!!");
+            mToast.show();
+            endCurrentGame();
+            return false;
+        }else if(guessRange.getProgress() + 1 == randVal ){
+            mToast.setText("WELL DONE, YOU'VE WON!!");
+            mToast.show();
+            endCurrentGame();
+            return false;
+        }
+        return true;
     }
 
     // Stop the current game and reset variables
     public void endCurrentGame(){
         String ans = "Answer: " + randVal;
+        tries = 1;
         attemptView.setText(ans);
         retryBtn.setVisibility(View.VISIBLE);
         returnBtn.setVisibility(View.VISIBLE);
@@ -200,39 +216,29 @@ public class MainActivity extends AppCompatActivity {
 
         if (difficultySpinner.getSelectedItemPosition() == 0){
             // Beginner Difficulty
-            tries = 5;
+            maxTries = 4;
             upperbound = 9;
         }else if(difficultySpinner.getSelectedItemPosition() == 1){
             // Intermediate Difficulty
-            tries = 5;
+            maxTries = 5;
             upperbound = 49;
         }else if(difficultySpinner.getSelectedItemPosition() == 2){
             // Professional Difficulty
-            tries = 3;
+            maxTries = 10;
             upperbound = 99;
         }else{
-            tries = 2;
+            // Expert Difficulty
+            maxTries = 1;
             upperbound = 99;
+            remainder = "Only One Chance!";
+            int int_random = rand.nextInt(upperbound);
+            randVal = int_random + 1;
+            return;
         }
         remainder = "Attempt #" + tries;
-        tempTries = tries;
-        //generate random values from 1-30
+        //generate random values from 1 to the upperbound value
         int int_random = rand.nextInt(upperbound);
         randVal = int_random + 1;
     }
-
-
-    /*public BitmapDrawable writeOnDrawable(int drawableId, String text){
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(20);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawText(text,0,bitmap.getHeight()/2,paint,);
-
-        return new BitmapDrawable(bitmap);
-    }*/
-
 
 }
