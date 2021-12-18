@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainRelativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
@@ -21,7 +20,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="24dp"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:visibility="visible"/>
 
 
@@ -31,7 +30,7 @@
             android:layout_height="35dp"
             android:background="#1E2A30"
             android:src="@drawable/ic_baseline_info_24"
-            android:paddingStart="12dp"
+            android:paddingStart="24dp"
             android:paddingEnd="24dp"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
@@ -70,7 +69,7 @@
             android:ellipsize="end"
             android:layout_below="@id/welcomeView"
             android:layout_marginTop="5dp"
-            android:background="@color/backgroundCol"
+            android:background="@null"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:shadowColor="@color/purple_200"
@@ -93,7 +92,6 @@
             android:layout_below="@id/attemptView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"/>
-
     </RelativeLayout>
 
     <EditText

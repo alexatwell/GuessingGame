@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton returnBtn;
     private AppCompatButton guessBtn;
     private String remainder;
+    RelativeLayout middleSec;
     private final String rules = "RULES:" +
             "\n 1: Press Start to generate a random number and begin playing." +
             "\n 2: The number of attempts is assigned by the difficulty setting" +
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
 
-        RelativeLayout mLinearLayout = findViewById(R.id.mainRelativeLayout);
+        middleSec = findViewById(R.id.middleSection);
 
         // Add difficulty options
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this ,R.array.difficulty_list,
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             guessBtn.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
-            guessRange.setProgress(upperbound/2);
+            guessRange.setProgress(upperbound/2 + 1);
             gRangeValue.setText(String.valueOf(guessRange.getProgress()));
             attemptView.setText(remainder);
         });
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                //Toast.makeText(MainActivity.this, String.valueOf(progressChanged), Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -151,23 +152,24 @@ public class MainActivity extends AppCompatActivity {
                     if (guessVal >= randVal / 2) {
                         mToast.setText("COLD");
                         mToast.show();
-                        mLinearLayout.setBackgroundResource(R.mipmap.cold);
                     } else {
                         mToast.setText("COLDER");
                         mToast.show();
                     }
+                    middleSec.setBackgroundResource(R.drawable.ic_baseline_snowflake_24);
                 } else {
                     if (guessVal <= randVal * 2) {
                         mToast.setText("HOT");
                         mToast.show();
-                        mLinearLayout.setBackgroundResource(R.mipmap.cold);
                     } else {
                         mToast.setText("HOTTER");
                         mToast.show();
                     }
+                    middleSec.setBackgroundResource(R.drawable.ic_baseline_fire_24);
                 }
             }
         });
+
         // Show the rules
         rulesBtn.setOnClickListener(v -> {
             new AlertDialog.Builder(this)
@@ -186,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
             remainder = "Attempt #" + tries;
         }
         attemptView.setText(remainder);
-        if (tries > maxTries){
+        if (tries == maxTries && Integer.parseInt(String.valueOf(gRangeValue.getText())) != randVal ){
             mToast.setText("BETTER LUCK NEXT TIME!!");
             mToast.show();
             endCurrentGame();
             return false;
-        }else if(guessRange.getProgress() + 1 == randVal ){
+        }else if(Integer.parseInt(String.valueOf(gRangeValue.getText()))  == randVal ){
             mToast.setText("WELL DONE, YOU'VE WON!!");
             mToast.show();
             endCurrentGame();
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
     public void endCurrentGame(){
         String ans = "Answer: " + randVal;
         tries = 1;
+        middleSec.setBackgroundResource(0);
         attemptView.setText(ans);
         retryBtn.setVisibility(View.VISIBLE);
         returnBtn.setVisibility(View.VISIBLE);
