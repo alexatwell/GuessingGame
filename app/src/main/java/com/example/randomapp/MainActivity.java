@@ -182,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
     // Decrement tries and end game if player is out of attempts
     public boolean monitorTries() {
         tries++;
-        if (tries >= maxTries){
+        if (tries == maxTries){
             remainder = "Last Chance!!";
         }else{
             remainder = "Attempt #" + tries;
         }
         attemptView.setText(remainder);
-        if (tries == maxTries && Integer.parseInt(String.valueOf(gRangeValue.getText())) != randVal ){
+        if (tries > maxTries && Integer.parseInt(String.valueOf(gRangeValue.getText())) != randVal ){
             mToast.setText("BETTER LUCK NEXT TIME!!");
             mToast.show();
             endCurrentGame();
