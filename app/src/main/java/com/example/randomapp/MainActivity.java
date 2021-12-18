@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private String remainder;
     private final String rules = "RULES:" +
             "\n 1: Press Start to generate a random number and begin playing." +
-            "\n 2: The number of attempts are assigned by the difficulty setting" +
-            "\n 3: Move the seekbar to choose a number." +
-            "\n 4: Tap the 'ENTER' button to make that guess." +
-            "\n 5: You get 'HOTTER!' when your guess is more the value" +
-            "\n 6: You get 'COLDER!' when your guess is less the value" +
+            "\n 2: The number of attempts is assigned by the difficulty setting" +
+            "\n 3: Move the seek bar to choose a number." +
+            "\n 4: Tap the 'GUESS' button to make that guess." +
+            "\n 5: You get 'HOTTER!' when your guess is more than the value" +
+            "\n 6: You get 'COLDER!' when your guess is less than the value" +
             "\n 7: Guess the correct value to win" +
             "\n\n GOOD LUCK!!!";
 
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     if (tries <= 0) {
                         return;
                     }
-                    if (guessVal <= randVal / 2) {
+                    if (guessVal >= randVal / 2) {
                         mToast.setText("COLD");
                         mToast.show();
                         mLinearLayout.setBackgroundResource(R.mipmap.cold);
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     // Decrement tries and end game if player is out of attempts
     public boolean monitorTries() {
         tries++;
-        if (tries + 1 > maxTries){
+        if (tries >= maxTries){
             remainder = "Last Chance!!";
         }else{
             remainder = "Attempt #" + tries;
