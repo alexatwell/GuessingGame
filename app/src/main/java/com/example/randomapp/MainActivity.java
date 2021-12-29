@@ -24,17 +24,21 @@ public class MainActivity extends AppCompatActivity {
     private int randVal;
     private int tries = 1;
     private int maxTries;
+    private int levelCounter = 1;
     private int upperbound;
     private Spinner difficultySpinner;
     private TextView attemptView;
+    private TextView levelView;
     private TextView welcomeView;
     private EditText gRangeValue;
     private SeekBar guessRange;
     private Button startBtn;
     private ImageButton retryBtn;
     private ImageButton returnBtn;
+    private ImageButton levelUpBtn;
     private AppCompatButton guessBtn;
     private String remainder;
+    private String level;
     RelativeLayout middleSec;
     private final String rules = "RULES:" +
             "\n 1: Press Start to generate a random number and begin playing." +
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton rulesBtn = findViewById(R.id.instructionsBtn);
         welcomeView = findViewById(R.id.welcomeView);
         attemptView = findViewById(R.id.attemptView);
+        levelView = findViewById(R.id.levelView);
         guessRange = findViewById(R.id.guessControl);
         gRangeValue = findViewById(R.id.guessControlVal);
         gRangeValue.setEnabled(false);
@@ -65,10 +70,12 @@ public class MainActivity extends AppCompatActivity {
         guessBtn = findViewById(R.id.guessBtn);
         retryBtn = findViewById(R.id.retryBtn);
         returnBtn = findViewById(R.id.returnBtn);
+        levelUpBtn = findViewById(R.id.levelUpBtn);
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         //final EditText editGuess =  findViewById(R.id.editGuess);
+        Random rand = new Random();
 
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -89,13 +96,15 @@ public class MainActivity extends AppCompatActivity {
             startBtn.setVisibility(View.INVISIBLE);
             welcomeView.setVisibility(View.INVISIBLE);
             attemptView.setVisibility(View.VISIBLE);
+            levelView.setVisibility(View.VISIBLE);
             guessBtn.setVisibility(View.VISIBLE);
             guessRange.setVisibility(View.VISIBLE);
             guessRange.setMax(upperbound);
-            guessRange.setProgress(upperbound/2 + 1);
+            guessRange.setProgress(rand.nextInt(upperbound));
             gRangeValue.setVisibility(View.VISIBLE);
             gRangeValue.setText(String.valueOf(guessRange.getProgress()));
             attemptView.setText(remainder);
+            levelView.setText(level);
         });
 
         // Return to Home screen
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             startBtn.setVisibility(View.VISIBLE);
             welcomeView.setVisibility(View.VISIBLE);
             attemptView.setVisibility(View.INVISIBLE);
+            levelView.setVisibility(View.INVISIBLE);
             guessRange.setVisibility(View.INVISIBLE);
             gRangeValue.setVisibility(View.INVISIBLE);
             retryBtn.setVisibility(View.INVISIBLE);
@@ -116,9 +126,23 @@ public class MainActivity extends AppCompatActivity {
             guessBtn.setVisibility(View.VISIBLE);
             retryBtn.setVisibility(View.INVISIBLE);
             returnBtn.setVisibility(View.INVISIBLE);
-            guessRange.setProgress(upperbound/2 + 1);
+            guessRange.setProgress(rand.nextInt(upperbound));
             gRangeValue.setText(String.valueOf(guessRange.getProgress()));
             attemptView.setText(remainder);
+            levelView.setText(level);
+        });
+
+        // Continue to next level
+        levelUpBtn.setOnClickListener(v ->{
+            raiseDifficulty();
+            guessBtn.setVisibility(View.VISIBLE);
+            levelUpBtn.setVisibility(View.INVISIBLE);
+            retryBtn.setVisibility(View.INVISIBLE);
+            returnBtn.setVisibility(View.INVISIBLE);
+            guessRange.setMax(upperbound);
+            guessRange.setProgress(rand.nextInt(upperbound));
+            gRangeValue.setText(String.valueOf(guessRange.getProgress()));
+            levelView.setText(level);
         });
 
         // Update the edittext to show the selected value on the seekbar
@@ -151,20 +175,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (guessVal >= randVal / 2) {
                         mToast.setText("COLD");
-                        mToast.show();
                     } else {
                         mToast.setText("COLDER");
-                        mToast.show();
                     }
+                    mToast.show();
                     middleSec.setBackgroundResource(R.drawable.ic_baseline_snowflake_24);
                 } else {
                     if (guessVal <= randVal * 2) {
                         mToast.setText("HOT");
-                        mToast.show();
                     } else {
                         mToast.setText("HOTTER");
-                        mToast.show();
                     }
+                    mToast.show();
                     middleSec.setBackgroundResource(R.drawable.ic_baseline_fire_24);
                 }
             }
@@ -191,20 +213,20 @@ public class MainActivity extends AppCompatActivity {
         if (tries > maxTries && Integer.parseInt(String.valueOf(gRangeValue.getText())) != randVal ){
             mToast.setText("BETTER LUCK NEXT TIME!!");
             mToast.show();
-            endCurrentGame();
+            lostCurrentGame();
             return false;
         }else if(Integer.parseInt(String.valueOf(gRangeValue.getText()))  == randVal ){
             mToast.setText("WELL DONE, YOU'VE WON!!");
             mToast.show();
-            endCurrentGame();
+            wonCurrentGame();
             return false;
         }
         return true;
     }
 
-    // Stop the current game and reset variables
-    public void endCurrentGame(){
-        String ans = "Answer: " + randVal;
+    // Stop the current game and reset variables in the event that the game is lost
+    public void lostCurrentGame(){
+        String ans = "GAME OVER!"; //"Answer: " + randVal;
         tries = 1;
         middleSec.setBackgroundResource(0);
         attemptView.setText(ans);
@@ -213,19 +235,32 @@ public class MainActivity extends AppCompatActivity {
         guessBtn.setVisibility(View.INVISIBLE);
     }
 
+    // Stop the current game and reset variables if the level was cleared
+    public void wonCurrentGame(){
+        String ans = "VICTORY!!!"; //"Answer: " + randVal;
+        tries = 1;
+        middleSec.setBackgroundResource(0);
+        attemptView.setText(ans);
+        levelUpBtn.setVisibility(View.VISIBLE);
+        returnBtn.setVisibility(View.VISIBLE);
+        guessBtn.setVisibility(View.INVISIBLE);
+    }
+
     // Set the number of tries. determine the generated number, and set the seekbar's limit
     public void setDifficulty(){
         Random rand = new Random(); //instance of random class
+        int x = difficultySpinner.getSelectedItemPosition();
+        levelCounter = 1;
 
-        if (difficultySpinner.getSelectedItemPosition() == 0){
+        if (x == 0){
             // Beginner Difficulty
             maxTries = 4;
             upperbound = 9;
-        }else if(difficultySpinner.getSelectedItemPosition() == 1){
+        }else if(x == 1){
             // Intermediate Difficulty
             maxTries = 5;
             upperbound = 49;
-        }else if(difficultySpinner.getSelectedItemPosition() == 2){
+        }else if(x == 2){
             // Professional Difficulty
             maxTries = 10;
             upperbound = 99;
@@ -238,6 +273,37 @@ public class MainActivity extends AppCompatActivity {
             randVal = int_random + 1;
             return;
         }
+        level = "LEVEL " + levelCounter;
+        remainder = "Attempt #" + tries;
+        //generate random values from 1 to the upperbound value
+        int int_random = rand.nextInt(upperbound);
+        randVal = int_random + 1;
+    }
+
+    // Increase the difficulty
+    public void raiseDifficulty(){
+        Random rand = new Random(); //instance of random class
+        int x = difficultySpinner.getSelectedItemPosition();
+        levelCounter++;
+
+        if (x == 0){
+            // Beginner Difficulty
+            upperbound = upperbound + 9;
+        }else if(x == 1){
+            // Intermediate Difficulty
+            upperbound += 49;
+        }else if(x == 2){
+            // Professional Difficulty
+            upperbound += 99;
+        }else{
+            // Expert Difficulty
+            upperbound += 99;
+            remainder = "Only One Chance!";
+            int int_random = rand.nextInt(upperbound);
+            randVal = int_random + 1;
+            return;
+        }
+        level = "LEVEL " + levelCounter;
         remainder = "Attempt #" + tries;
         //generate random values from 1 to the upperbound value
         int int_random = rand.nextInt(upperbound);
